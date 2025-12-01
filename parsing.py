@@ -1,4 +1,5 @@
 """
+parsing.py
 This file will create all the project dev data and parse it
 The goal is to create smaller digestible embeddings for the agents runtime and 
 response. 
