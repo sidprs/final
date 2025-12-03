@@ -111,3 +111,77 @@ class FastAgent:
                 #TODO write debug statements to verify if this works   
                     
                 return results
+def load_test_data(filepath: str) -> List[Dict[str, Any]]:
+    with open(filepath, 'r') as f:
+        return json.load(f)
+
+
+def write_json_output(results: List[Dict[str, Any]], filepath: str):
+    output_only = [{"output": r["output"]} for r in results]
+    with open(filepath, 'w') as f:
+        json.dump(output_only, f, indent=2)
+
+
+def write_csv_output(results: List[Dict[str, Any]], filepath: str):
+    with open(filepath, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=['id', 'output'])
+        writer.writeheader()
+        writer.writerows(results)
+
+
+def run_inference(test_file: str, 
+                  output_json: str, 
+                  output_csv: str = None, 
+                  workers: int = 20,
+                  verify: bool = False,
+                  limit: int = None):
+    
+    print(f"loading test data from {test_file}")
+    questions = load_test_data(test_file)
+    
+    if limit:
+        questions = questions[:limit]
+        print(f"limiting to first {limit} questions")
+    
+    print(f"loaded {len(questions)} questions")
+    
+    # run agent
+    agent = FastAgent(max_workers=workers)
+    results = agent.solve_batch(questions, verify=verify)
+    
+    if not results:
+        print("\nno results generated. check errors above.")
+        return []
+    
+    # write json
+    write_json_output(results, output_json)
+    print(f"\nwrote json to {output_json}")
+    
+    # write csv
+    if output_csv:
+        write_csv_output(results, output_csv)
+        print(f"wrote csv to {output_csv}")
+    
+    return results
+
+
+if __name__ == "__main__":
+    import argparse as arg
+    
+    parser = arg.ArgumentParser()
+    parser.add_argument('test_file', nargs='?', default='cse_476_final_project_test_data.json')
+    parser.add_argument('--workers', type=int, default=20)
+    #parser.add_argument('--workers', type=int, default=20)
+    parser.add_argument('--verify', action='store_true')
+    parser.add_argument('--limit', type=int)
+    
+    args = parser.parse_args()
+    
+    run_inference(
+        args.test_file,
+        "cse_476_final_project_answers.json",
+        "answers.csv",
+        workers=args.workers,
+        verify=args.verify,
+        limit=args.limit
+    )
