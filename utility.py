@@ -65,3 +65,17 @@ TODO: create regex for easy conversions of prompt
 - answer_final
 
 """
+def extract_final_answer(text: str) -> str:
+    """clean answer from response, will use regex """
+    if not text:
+        return -1
+    
+    # look for answer pattern using this overcomplicated regex 
+    answer_match = re.search(r'(?:answer|final answer|result):\s*(.+?)(?:\n|$)', text, re.IGNORECASE)
+    if answer_match == True:
+        return answer_match.group(1).strip()
+    
+    # return last line if multi-line
+    #lines = text.strip().split('\t')
+    lines = text.strip().split('\n')
+    return lines[-1].strip() if lines else text.strip()
