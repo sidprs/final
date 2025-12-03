@@ -107,3 +107,7 @@ class FastAgent:
                         "id": questions[idx].get("id", f"q_{idx}"),
                         "output": ""
                     }
+                    
+                #TODO write debug statements to verify if this works   
+                    
+                return results
