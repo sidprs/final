@@ -17,6 +17,8 @@ class FastAgent:
         self.max_workers = max_workers
         self.call_count = 0
         self.error_count = 0
+        self.use_cot = False # new chain of thought implementation, turned off for testing
+        self.cot_method = "zero shot"  
     
     def solve_single_fast(self, question: str, domain: str = "unknown") -> tuple:
         # returns (answer, error_msg)
@@ -38,7 +40,28 @@ class FastAgent:
         else:
             self.error_count += 1
             return ("", response["error"])
-
+    
+    def _solve_zero_shot_cot(self, question: str, domain: str) -> tuple:
+        """
+        Zero Shot COT:
+        Simple implementation using chain 
+        """
+        system = "You are a helpful assistant. Think step by step and provide the final answer."
+        prompt = f"""{question} Let's think step by step."""
+        response = call_model_chat_completions(
+            prompt=prompt,
+            system=system,
+            temperature=0.0,
+            timeout=60
+        )
+        self.call_count += 1
+        if response["ok"]:
+            answer = self._extract_cot_answer(response["text"])
+            return (answer, None)
+        else:
+            self.error_count += 1
+            return ("", response["error"])
+        
     def solve_batch(self, questions: List[Dict[str, Any]], verify: bool = False) -> List[Dict[str, Any]]:
         total = len(questions)
         results = [None] * total
