@@ -5,7 +5,7 @@ import json
 import argparse
 from gpu import run_inference
 
-
+TEST_PATH = Path("cse476_final_project_dev_data.json")
 INPUT_PATH = Path("cse_476_final_project_test_data.json")
 OUTPUT_PATH = Path("cse_476_final_project_answers.json")
 
@@ -16,15 +16,45 @@ def validate_results(answers):
         if "output" not in answer:
             raise ValueError(f"missing output at {idx}")
         if not isinstance(answer["output"], str):
-            raise TypeError(f"non-string output at {idx}")
+            raise TypeError(f" string output at {idx}")
         if len(answer["output"]) >= 5000:
             raise ValueError(f"output too long at {idx}")
+        
+        
+def compare_with_expected(results, dev_data):
+    """using the dev data and test correctness"""
+    correct = 0
+    total = len(results)
+    
+    
+    for i, (result, dev_item) in enumerate(zip(results, dev_data)):
+        generated = result.get("output", "").strip()
+        expected = dev_item.get("output", "").strip()
+        
+        is_correct = generated == expected
+        if is_correct:
+            correct += 1
+        
+        if not is_correct or i < 1:  # show first wrong and all incorrect
+            print(f"\n Question {i+1}:")
+            print(f"   Input: {dev_item.get('input', '')[:100]}...")   #include only 100 
+            print(f"   Expected: {expected[:200]}")
+            print(f"   Generated: {generated[:200]}")
+            print(f"   Match: {' YES ' if is_correct else ' NO '}")
+    
+    print("\n" + "="*60)
+    print(f"Accuracy: {correct}/{total} ({100*correct/total:.1f}%)")
+    print("="*60)
+    
+    return correct, total
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--workers', type=int, default=20, help='workers (default: 20)')
+    parser.add_argument('--workers', type=int, default=50, help='workers (default: 50)')
     parser.add_argument('--verify', action='store_true', help='enable verification')
+    parser.add_argument('--dev', action='store_true', help='use dev data')
+
     #parser.add_argument('--test', type=int, help='test on first N questions')
     parser.add_argument('--test', type=int, help='test on first N questions')
     
