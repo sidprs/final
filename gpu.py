@@ -180,9 +180,11 @@ if __name__ == "__main__":
     parser = arg.ArgumentParser()
     parser.add_argument('test_file', nargs='?', default='cse_476_final_project_test_data.json')
     parser.add_argument('--workers', type=int, default=20)
+    # uncomment this line if your GPU is beefier 
+    #parser.add_argument('--workers', type=int, default=50)
     parser.add_argument('--verify', action='store_true')
     parser.add_argument('--limit', type=int)
-    
+
     args = parser.parse_args()
     
     run_inference(
