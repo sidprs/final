@@ -5,9 +5,9 @@ import json
 import argparse
 from gpu import run_inference
 
-TEST_PATH = Path("cse476_final_project_dev_data.json")
-INPUT_PATH = Path("cse_476_final_project_test_data.json")
-OUTPUT_PATH = Path("cse_476_final_project_answers.json")
+TEST_PATH = Path("json/cse476_final_project_dev_data.json")
+INPUT_PATH = Path("json/cse_476_final_project_test_data.json")
+OUTPUT_PATH = Path("json/cse_476_final_project_answers.json")
 
 
 def validate_results(answers):
@@ -63,6 +63,9 @@ def main():
     print("cse 476 final project agent")
     
     # load
+    print(args)
+    
+    
     with open(INPUT_PATH, 'r') as f:
         questions = json.load(f)
     
