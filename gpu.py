@@ -25,9 +25,10 @@ class FastAgent:
         self.call_count = 0
         self.error_count = 0
     
-    def solve_single_fast(self, question: str, domain: str = "unknown") -> tuple:
+    def solve_direct(self, question: str, domain: str = "unknown") -> tuple[str,str]:
         # returns (answer, error_msg)
         # i think that some output is not complete so update the prompt
+        self.algorithm_stats["direct"] += 1
         system = "final answer only. dont give a explanation but make the output be complete."
         prompt = f"{question}"
         
@@ -46,7 +47,7 @@ class FastAgent:
             self.error_count += 1
             return ("", response["error"])
     
-    def _solve_zero_shot_cot(self, question: str, domain: str) -> tuple:
+    def solve_cot(self, question: str, domain: str) -> tuple:
         """
         Zero Shot COT:
         Simple implementation using chain 
@@ -57,7 +58,7 @@ class FastAgent:
             prompt=prompt,
             system=system,
             temperature=0.0,
-            timeout=60
+            timeout=45
         )
         self.call_count += 1
         if response["ok"]:
@@ -66,6 +67,33 @@ class FastAgent:
         else:
             self.error_count += 1
             return ("", response["error"])
+        
+    def solve_self_const(self, question:str,domain: str = "unknown", n_samples: int = 3) -> tuple[str, str]:
+        self.algorithm_stats["self_consistency"] += 1
+        
+        system = "You are a helpful assistant. Provide a clear, concise answer."
+        prompt = f"{question}"
+        
+        answers = []
+        for i in range(n_samples):
+            response = call_model_chat_completions(
+                prompt=prompt,
+                system=system,
+                temperature=0.7,  # Higher temp for diversity
+                timeout=30
+            )
+            self.call_count += 1
+            
+            if response["ok"]:
+                answer = extract_final_answer(response["text"])
+                answers.append(answer)
+        
+        if not answers:
+            self.error_count += 1
+            return ("", "All attempts failed")
+        
+        final_answer = self._majority_vote(answers)
+        return (final_answer, None)
         
     def solve_batch(self, questions: List[Dict[str, Any]], verify: bool = False) -> List[Dict[str, Any]]:
         total = len(questions)
