@@ -129,10 +129,11 @@ class FastAgent:
                     instant = time.time()
                     if completed % 100 == 0 or (instant - last_print) >= 5:
                         elapsed = instant - start_time
+                        print(f" [{elapsed / 100 }]")
                         rate = (completed / elapsed) if elapsed > 0 else 0
                         remaining = (total - completed) / rate if rate > 0 else 0
                         pct = (completed / total) * 100
-                        print(f"  [{pct:5.1f}%] {completed:5d}/{total} | {rate:4.1f} q/s | eta {remaining:5.1f}s | errors: {self.error_count}")
+                        print(f"  [{pct:5.1f}%] {completed:5d}/{total} | {rate:4.2f} q/s | eta {remaining:5.1f}s | errors: {self.error_count}")
                         last_print = instant
                         
                 except Exception as e:
