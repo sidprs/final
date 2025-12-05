@@ -28,11 +28,24 @@ My error rate has a bug and does not accurately detect incorrect output. I was t
 
 To run tests, run the following command
 
-```bash
+
+```python
   python agent.py --test 5
-  python agent.py --test 50
+```
+
+```python
   python agent.py --workers 30
+```
+
+```python
+  python agent.py --test 5
+```
+
+```python
   python gpu.py json/cse_476_final_project_test_data.json --algorithm cot --limit 10
+```
+
+```python
   head json/cse_476_final_project_answers.json
 ```
 
