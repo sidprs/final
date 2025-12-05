@@ -196,14 +196,15 @@ def run_inference(test_file: str, output_json: str,
         print("\nno results generated. check errors above.")
         return []
     
-    # write json
+    # write JSON output
     write_json_output(results, output_json)
     print(f"\nwrote json to {output_json}")
-    
-    # write csv
+
+    # write CSV output if requested
     if output_csv:
         write_csv_output(results, output_csv)
         print(f"wrote csv to {output_csv}")
+
     
     return results
 

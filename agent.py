@@ -54,7 +54,7 @@ def main():
     parser.add_argument('--workers', type=int, default=20, help='workers (default: 50)')
     parser.add_argument('--verify', action='store_true', help='enable verification')
     parser.add_argument('--dev', action='store_true', help='use dev data')
-
+    parser.add_argument('--test_file', type=str, default=str(INPUT_PATH), help='path to input JSON file')
     #parser.add_argument('--test', type=int, help='test on first N questions')
     parser.add_argument('--test', type=int, help='test on first N questions')
     
@@ -72,15 +72,15 @@ def main():
     print(f"loaded {len(questions)} questions")
     
     # run
-    results = run_inference(
-        str(INPUT_PATH),
+    run_inference(
+        args.test_file,    
         str(OUTPUT_PATH),
         output_csv="answers.csv",
         workers=args.workers,
         verify=args.verify,
         limit=args.test
     )
-    
+
     # validate format only
     with open(OUTPUT_PATH, 'r') as f:
         saved = json.load(f)
