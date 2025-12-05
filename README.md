@@ -1,15 +1,17 @@
 # CSE 476 Project
 
 ## Usage
-Quick Test (5 questions)
+# Quick Test (5 questions)
+
+
 python agent.py --test 5
-Medium Test (50 questions)
+# Medium Test (50 questions)
 python agent.py --test 50
-Full Run (all questions)
+# Full Run (all questions)
 python agent.py --workers 30
-Debug CoT (Chain of Thought)
+# Debug CoT (Chain of Thought)
 python gpu.py json/cse_476_final_project_test_data.json --algorithm cot --limit 10
-Check Results
+# Check Results
 head json/cse_476_final_project_answers.json
 
 
