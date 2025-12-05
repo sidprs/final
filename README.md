@@ -1,11 +1,23 @@
-# final
 # CSE 476 Project
 
-# 1.  run main 
-python main.py
 
-# 2. generate answers for test data
+
+# 1. generate answers for test data
 python agent.py
 
-# 3. check the output file
-cat cse_476_final_project_answers.json
+# 2. check the output file
+less cse_476_final_project_answers.json
+
+
+# Conclusion 
+
+This project using GPU threading to run "futures" which calls the API in parallel threads.
+This resulted in a faster runtime 
+
+For better accuracy / results from the LLM API provided, I created a comprehensive system prompt and user prompt
+I have also created a few shot prompt (which is disabled due to bugs that reduces runtime)
+which increases the accuracy of the program
+
+My error rate has a bug and does not accurately detect incorrect output. I was trying to debug but couldnt find it out
+
+
