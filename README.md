@@ -23,7 +23,12 @@ which increases the accuracy of the program
 
 My error rate has a bug and does not accurately detect incorrect output. I was trying to debug but couldnt find it out
 
+## For final run 
+```python
 
+python agent.py --workers 20
+vi cse_476_final_project_answers.json  
+```
 ## Running Tests
 
 To run tests, run the following command
