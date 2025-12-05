@@ -7,6 +7,7 @@ fast parallel inference with debugging
 import json
 import time
 import csv
+import re
 from typing import List, Dict, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from utility import call_model_chat_completions, extract_final_answer
@@ -79,7 +80,7 @@ class FutureAgent:
             response = call_model_chat_completions(
                 prompt=prompt,
                 system=system,
-                temperature=0.7,  # Higher temp for diversity
+                temperature=0.7,  
                 timeout=30
             )
             self.call_count += 1
@@ -94,6 +95,22 @@ class FutureAgent:
         
         final_answer = self._majority_vote(answers)
         return (final_answer, None)
+    def _extract_from_reasoning(self, text: str) -> str:
+        """Extract final answer from chain of thought reasoning"""
+        # Look for common conclusion patterns
+        patterns = [
+            r'(?:therefore|thus|so|final answer|answer)[:,]?\s*(.+?)(?:\n|$)',
+            r'(?:the answer is)[:,]?\s*(.+?)(?:\n|$)',
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match:
+                return match.group(1).strip()
+        
+        # Fallback: return last non-empty line
+        lines = [l.strip() for l in text.strip().split('\n') if l.strip()]
+        return lines[-1] if lines else text.strip()
         
     def solve_batch(self, questions: List[Dict[str, Any]], verify: bool = False) -> List[Dict[str, Any]]:
         total = len(questions)
