@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from utility import call_model_chat_completions, extract_final_answer
 
 
-class FastAgent:
+class FutureAgent:
     def __init__(self, max_workers: int = 20):
         self.max_workers = max_workers
         self.call_count = 0
@@ -217,7 +217,7 @@ def run_inference(test_file: str, output_json: str,
     print(f"loaded {len(questions)} questions")
     
     # run agent
-    agent = FastAgent(max_workers=workers)
+    agent = FutureAgent(max_workers=workers)
     results = agent.solve_batch(questions, verify=verify)
     
     if not results:
