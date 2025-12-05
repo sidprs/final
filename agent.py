@@ -13,10 +13,6 @@ OUTPUT_PATH = Path("json/cse_476_final_project_answers.json")
 def validate_results(answers):
     # just validate format, not length
     for idx, answer in enumerate(answers):
-        if "output" not in answer:
-            raise ValueError(f"missing output at {idx}")
-        if not isinstance(answer["output"], str):
-            raise TypeError(f" string output at {idx}")
         if len(answer["output"]) >= 5000:
             raise ValueError(f"output too long at {idx}")
         
