@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""
-Generate a placeholder answer file that matches the expected auto-grader format.
-
-Replace the placeholder logic inside `build_answers()` with your own agent loop
-before submitting so the ``output`` fields contain your real predictions.
-
-Reads the input questions from cse_476_final_project_test_data.json and writes
-an answers JSON file where each entry contains a string under the "output" key.
+""" each entry contains a string under the "output" key.
 """
 
 from __future__ import annotations
