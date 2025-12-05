@@ -1,6 +1,7 @@
-# gpu.py
+
 
 """
+gpu.py
 fast parallel inference with debugging
 """
 
@@ -98,7 +99,7 @@ class FutureAgent:
         return (final_answer, None)
     
     def _extract_from_reasoning(self, text: str) -> str:
-        """Extract final answer from chain of thought reasoning"""
+        """extract final answer from chain of thought reasoning"""
         # Look for common conclusion patterns
         patterns = [
             r'(?:therefore|thus|so|final answer|answer)[:,]?\s*(.+?)(?:\n|$)',
@@ -130,7 +131,7 @@ class FutureAgent:
         return normalized.get(most_common, answers[0])
     
     def select_algorithm(self, question: str, domain: str) -> str:
-        """Choose which algorithm to use based on question """
+        """choose which algorithm to use based on question """
         q_lower = question.lower()
         if any(keyword in q_lower for keyword in ['why', 'explain', 'how', 'calculate', 'prove']):
             return "cot"
