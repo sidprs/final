@@ -51,7 +51,7 @@ def compare_with_expected(results, dev_data):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--workers', type=int, default=50, help='workers (default: 50)')
+    parser.add_argument('--workers', type=int, default=20, help='workers (default: 50)')
     parser.add_argument('--verify', action='store_true', help='enable verification')
     parser.add_argument('--dev', action='store_true', help='use dev data')
 

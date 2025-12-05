@@ -19,6 +19,11 @@ class FastAgent:
         self.error_count = 0
         self.use_cot = False # new chain of thought implementation, turned off for testing
         self.cot_method = "zero shot"  
+        
+    def reset(self)->None:
+        # resets the counter per run 
+        self.call_count = 0
+        self.error_count = 0
     
     def solve_single_fast(self, question: str, domain: str = "unknown") -> tuple:
         # returns (answer, error_msg)
@@ -92,6 +97,11 @@ class FastAgent:
         
         #using threadpool instead of other metal core inference
         with ThreadPoolExecutor(max_workers=self.max_workers) as exec:
+            """
+            using threads to launch parallel threads (futures)
+            these futures will return async 
+            TODO: determine if deadlocking is causing increase in error rates
+            """
             future_to_idx = {}
             for idx, q in enumerate(questions):
                 future = exec.submit(
@@ -213,7 +223,7 @@ if __name__ == "__main__":
     run_inference(
         args.test_file,
         "cse_476_final_project_answers.json",
-        "answers.csv",
+        "test_runs/answers.csv",
         workers=args.workers,
         verify=args.verify,
         limit=args.limit
