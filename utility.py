@@ -68,14 +68,22 @@ TODO: create regex for easy conversions of prompt
 def extract_final_answer(text: str) -> str:
     """clean answer from response, will use regex """
     if not text:
-        return -1
+        return ""
+    # tested with bash script
+    # what this does is that it searches for keywords and extracts the line befor
+    # and after from the sentence and appends it to a possible match
+    patterns = [
+        r'(?:final answer|answer|result|conclusion):\s*[*_]?(.+?)[*_]?(?:\n|$)',
+        r'(?:therefore|thus|so),?\s+(?:the answer is\s+)?(.+?)(?:\n|$)',
+        r'####\s*(.+?)(?:\n|$)', 
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            return match.group(1).strip()
     
-    # look for answer pattern using this overcomplicated regex 
-    answer_match = re.search(r'(?:answer|final answer|result):\s*(.+?)(?:\n|$)', text, re.IGNORECASE)
-    if answer_match == True:
-        return answer_match.group(1).strip()
+    lines = [l.strip() for l in text.strip().split('\n') if l.strip()]
+    return lines[-1] if lines else text.strip()
     
-    # return last line if multi-line
-    #lines = text.strip().split('\t')
-    lines = text.strip().split('\n')
-    return lines[-1].strip() if lines else text.strip()
+
+   

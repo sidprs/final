@@ -37,5 +37,6 @@ class Parser:
         args:
             filepath: Path to JSON file containing dev data
         """
-        pass       
+        self.raw_data = filepath
+        return (filepath, none)
 
